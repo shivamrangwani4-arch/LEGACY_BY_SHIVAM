@@ -495,14 +495,14 @@
       <form id="checkoutForm">
         <h4 style="font-family: var(--font-brand); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 12px;">Customer & Delivery Details</h4>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-          <input type="text" required placeholder="Full Name" style="padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px;">
-          <input type="tel" required placeholder="Mobile Number (e.g. 0300-1234567)" style="padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px;">
+          <input type="text" name="customerName" id="checkoutFullName" required placeholder="Full Name" style="padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px;">
+          <input type="tel" name="phone" id="checkoutPhone" required placeholder="Mobile Number (e.g. 0300-1234567)" style="padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px;">
         </div>
-        <input type="email" required placeholder="Email Address for Order Tracking" style="width: 100%; padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px; margin-bottom: 12px;">
-        <input type="text" required placeholder="Complete Street Address / House / Flat No." style="width: 100%; padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px; margin-bottom: 12px;">
+        <input type="email" name="email" id="checkoutEmail" required placeholder="Email Address for Order Tracking" style="width: 100%; padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px; margin-bottom: 12px;">
+        <input type="text" name="address" id="checkoutAddress" required placeholder="Complete Street Address / House / Flat No." style="width: 100%; padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px; margin-bottom: 12px;">
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
-          <select required style="padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px; background: #fff; font-size: 0.85rem;">
+          <select name="city" id="checkoutCity" required style="padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px; background: #fff; font-size: 0.85rem;">
             <option value="">Select City in Pakistan</option>
             <option value="Karachi">Karachi</option>
             <option value="Lahore">Lahore</option>
@@ -520,7 +520,7 @@
             <option value="Larkana">Larkana</option>
             <option value="Other">Other Nationwide City</option>
           </select>
-          <input type="text" placeholder="Postal Code" style="padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px;">
+          <input type="text" name="postalCode" id="checkoutPostalCode" placeholder="Postal Code" style="padding: 10px 14px; border: 1px solid var(--color-gray-light); border-radius: 2px;">
         </div>
 
         <h4 style="font-family: var(--font-brand); font-size: 0.9rem; text-transform: uppercase; margin-bottom: 12px;">Payment Method</h4>
@@ -812,6 +812,8 @@
   </a>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./js/supabase.js"></script>
   <script src="./js/products.js"></script>
   <script src="./js/app.js"></script>
 </body>

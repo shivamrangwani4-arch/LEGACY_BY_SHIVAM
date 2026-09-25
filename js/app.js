@@ -1059,6 +1059,36 @@ function processOrder() {
   const modal = document.getElementById('checkoutModal');
   const orderNum = 'LEG-' + Math.floor(100000 + Math.random() * 900000);
 
+  // Extract form details
+  const fullName = document.getElementById('checkoutFullName')?.value || 'Guest Customer';
+  const phone = document.getElementById('checkoutPhone')?.value || '';
+  const email = document.getElementById('checkoutEmail')?.value || '';
+  const address = document.getElementById('checkoutAddress')?.value || '';
+  const city = document.getElementById('checkoutCity')?.value || 'Pakistan';
+  const postalCode = document.getElementById('checkoutPostalCode')?.value || '';
+
+  const subtotal = STATE.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const discount = Math.round(subtotal * (STATE.discountPercent / 100));
+  const finalTotal = subtotal - discount;
+  const orderedItems = [...STATE.cart];
+
+  // Save order to Supabase database
+  if (typeof saveOrderToSupabase === 'function') {
+    saveOrderToSupabase({
+      orderNumber: orderNum,
+      fullName: fullName,
+      phone: phone,
+      email: email,
+      address: address,
+      city: city,
+      postalCode: postalCode,
+      paymentMethod: 'COD',
+      totalAmount: finalTotal,
+      currency: STATE.currency,
+      items: orderedItems
+    });
+  }
+
   // Clear cart
   STATE.cart = [];
   saveCart();

@@ -547,7 +547,36 @@ function initCheckoutFlow() {
   if (form) {
     form.onsubmit = (e) => {
       e.preventDefault();
-      alert(`🎉 ORDER CONFIRMED!\n\nThank you for choosing LEGACY BY SHIVAM RANGWANI.\nYour parcel has been booked for nationwide dispatch with Cash on Delivery (COD).\nOrder helpline & WhatsApp: 03376060956\nEstimated arrival: 2-4 business days via Express Courier.`);
+      const orderNum = 'LEG-' + Math.floor(100000 + Math.random() * 900000);
+
+      const fullName = document.getElementById('checkoutFullName')?.value || 'Guest Customer';
+      const phone = document.getElementById('checkoutPhone')?.value || '';
+      const email = document.getElementById('checkoutEmail')?.value || '';
+      const address = document.getElementById('checkoutAddress')?.value || '';
+      const city = document.getElementById('checkoutCity')?.value || 'Pakistan';
+      const postalCode = document.getElementById('checkoutPostalCode')?.value || '';
+
+      const subtotal = PDP_STATE.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const orderedItems = [...PDP_STATE.cart];
+
+      // Save order to Supabase database
+      if (typeof saveOrderToSupabase === 'function') {
+        saveOrderToSupabase({
+          orderNumber: orderNum,
+          fullName: fullName,
+          phone: phone,
+          email: email,
+          address: address,
+          city: city,
+          postalCode: postalCode,
+          paymentMethod: 'COD',
+          totalAmount: subtotal,
+          currency: PDP_STATE.currency || 'PKR',
+          items: orderedItems
+        });
+      }
+
+      alert(`🎉 ORDER CONFIRMED!\n\nThank you for choosing LEGACY BY SHIVAM RANGWANI.\nTracking Reference: #${orderNum}\nYour parcel has been booked for nationwide dispatch with Cash on Delivery (COD).\nOrder helpline & WhatsApp: 03376060956\nEstimated arrival: 2-4 business days via Express Courier.`);
       PDP_STATE.cart = [];
       localStorage.setItem('legacy_cart', JSON.stringify(PDP_STATE.cart));
       updateCartUI();
