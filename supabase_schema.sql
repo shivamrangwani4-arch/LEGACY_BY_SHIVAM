@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
 
 -- 3. PRODUCTS CATALOG TABLE (For Live Dynamic Products Management)
 CREATE TABLE IF NOT EXISTS public.products (
-    id TEXT PRIMARY KEY,
+    id TEXT PRIMARY KEY DEFAULT ('leg-' || substr(md5(random()::text), 1, 8)),
     name TEXT NOT NULL,
     brand TEXT DEFAULT 'LEGACY',
     gender TEXT NOT NULL, -- 'men', 'women', 'juniors'
