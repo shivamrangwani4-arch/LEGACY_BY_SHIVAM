@@ -38,27 +38,27 @@ const STATE = {
   freeShippingThreshold: 3500 // Free shipping in Pakistan on orders over Rs. 3,500
 };
 
-// Hero Slides Data (Tailored for MEN, WOMEN, JUNIORS - High Fashion Editorial)
+// Hero Slides Data (Tailored for MEN, WOMEN, JUNIORS)
 const HERO_SLIDES = [
   {
-    title: "FW 2026-2027",
-    subtitle: "Winter Campaign // Menswear Edition",
+    title: "LEGACY MEN // FW26",
+    subtitle: "Atelier Knit Polos & Architectural Tailoring",
     cta: "Shop Men's Collection",
     image: "./images/hero_slide_1.jpg",
     gender: "men",
     category: "all"
   },
   {
-    title: "FW 2026-2027",
-    subtitle: "Winter Campaign // Womenswear Edition",
+    title: "LEGACY WOMEN // FW26",
+    subtitle: "Fluid Palazzo Sets & Minimalist Dresses",
     cta: "Explore Women's Drop",
     image: "./images/hero_slide_2.jpg",
     gender: "women",
     category: "all"
   },
   {
-    title: "FW 2026-2027",
-    subtitle: "Between Seasons // Juniors Archive",
+    title: "LEGACY JUNIORS // FW26",
+    subtitle: "Between Seasons Editorial Archive",
     cta: "Explore Juniors Collection",
     image: "./images/juniors_campaign_ad.png",
     gender: "juniors",
@@ -68,7 +68,6 @@ const HERO_SLIDES = [
 
 // Document Ready Initialization
 document.addEventListener('DOMContentLoaded', () => {
-  initHeaderScroll();
   initHeroSlider();
   initGenderNavigation();
   initCategoryFilters();
@@ -87,25 +86,6 @@ function formatPrice(amountInPKR) {
   const curr = STATE.currencyRates[STATE.currency] || STATE.currencyRates.PKR;
   const converted = Math.round(amountInPKR * curr.rate);
   return `${curr.symbol}${converted.toLocaleString()}`;
-}
-
-// ----------------------------------------------------
-// Header Scroll Controller (Sticky Frosted Header on Scroll)
-// ----------------------------------------------------
-function initHeaderScroll() {
-  const header = document.getElementById('siteHeader');
-  if (!header) return;
-
-  const onScroll = () => {
-    if (window.scrollY > 40) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
 }
 
 // ----------------------------------------------------
@@ -133,22 +113,12 @@ function initHeroSlider() {
         </button>
       </div>
     `;
-
-    // Direct tap anywhere on slide to view collection
-    slideEl.addEventListener('click', (e) => {
-      if (e.target.closest('button')) return;
-      filterBySlide(slide.gender, slide.category);
-    });
-
     container.appendChild(slideEl);
 
     const dot = document.createElement('button');
     dot.className = `slider-dot ${index === 0 ? 'active' : ''}`;
     dot.setAttribute('aria-label', `Slide ${index + 1}`);
-    dot.addEventListener('click', (e) => {
-      e.stopPropagation();
-      goToSlide(index);
-    });
+    dot.addEventListener('click', () => goToSlide(index));
     dotsContainer.appendChild(dot);
   });
 
