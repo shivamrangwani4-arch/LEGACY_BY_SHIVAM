@@ -1,4 +1,4 @@
-﻿// LEGACY (EST. 2026) - Supabase Integration Client
+// LEGACY (EST. 2026) - Supabase Integration Client
 // Project: https://vuquknseojgxeluplwcr.supabase.co
 // Creative Direction by Shivam Rangwani
 
@@ -94,5 +94,113 @@ async function saveSubscriberToSupabase(email) {
     return { data, error: null };
   } catch (err) {
     console.error('Newsletter exception:', err);
+  }
+}
+
+/**
+ * Fetch live products from Supabase table `products`
+ */
+async function fetchProductsFromSupabase() {
+  const sb = getSupabaseClient();
+  if (!sb) return null;
+
+  try {
+    const { data, error } = await sb
+      .from('products')
+      .select('*')
+      .eq('in_stock', true)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      if (error.code !== 'PGRST205') {
+        console.warn('Supabase fetch products notice:', error.message);
+      }
+      return null;
+    }
+
+    if (data && data.length > 0) {
+      const formatted = data.map(item => ({
+        id: item.id,
+        name: item.name,
+        brand: item.brand || 'LEGACY',
+        gender: item.gender,
+        category: item.category,
+        subCategory: item.sub_category || item.category,
+        price: Number(item.price),
+        originalPrice: item.original_price ? Number(item.original_price) : null,
+        tag: item.tag || 'LEGACY ATELIER',
+        badge: item.badge || '',
+        rating: Number(item.rating || 5.0),
+        reviews: Number(item.reviews_count || 1),
+        image: item.image,
+        secondaryImage: item.secondary_image || item.image,
+        colors: Array.isArray(item.colors) ? item.colors : (typeof item.colors === 'string' ? JSON.parse(item.colors) : []),
+        sizes: Array.isArray(item.sizes) ? item.sizes : (typeof item.sizes === 'string' ? JSON.parse(item.sizes) : ['S', 'M', 'L', 'XL']),
+        description: item.description || '',
+        features: Array.isArray(item.features) ? item.features : (typeof item.features === 'string' ? JSON.parse(item.features) : [])
+      }));
+
+      // Update global PRODUCTS_DATA
+      if (typeof window !== 'undefined') {
+        window.PRODUCTS_DATA = formatted;
+      }
+      console.log(`✅ Loaded ${formatted.length} live products from Supabase`);
+      return formatted;
+    }
+  } catch (err) {
+    console.warn('Error reading products from Supabase:', err);
+  }
+  return null;
+}
+
+/**
+ * Bulk sync local PRODUCTS_DATA into Supabase `products` table
+ */
+async function syncLocalProductsToSupabase() {
+  const sb = getSupabaseClient();
+  if (!sb) {
+    console.error('Supabase client not initialized');
+    return { count: 0, error: 'Not initialized' };
+  }
+
+  const list = typeof PRODUCTS_DATA !== 'undefined' ? PRODUCTS_DATA : [];
+  if (list.length === 0) return { count: 0 };
+
+  const rows = list.map(p => ({
+    id: p.id,
+    name: p.name,
+    brand: p.brand || 'LEGACY',
+    gender: p.gender,
+    category: p.category,
+    sub_category: p.subCategory || p.category,
+    price: p.price,
+    original_price: p.originalPrice || null,
+    tag: p.tag || 'LEGACY ATELIER',
+    rating: p.rating || 5.0,
+    reviews_count: p.reviews || 1,
+    image: p.image,
+    secondary_image: p.secondaryImage || p.image,
+    colors: p.colors || [],
+    sizes: p.sizes || ['S', 'M', 'L', 'XL'],
+    description: p.description || '',
+    features: p.features || [],
+    in_stock: true
+  }));
+
+  try {
+    const { data, error } = await sb
+      .from('products')
+      .upsert(rows, { onConflict: 'id' });
+
+    if (error) {
+      console.error('Sync to Supabase error:', error);
+      return { count: 0, error };
+    }
+
+    console.log(`🎉 Successfully synced ${rows.length} products to Supabase!`);
+    return { count: rows.length, error: null };
+  } catch (err) {
+    console.error('Sync exception:', err);
+    return { count: 0, error: err };
   }
 }

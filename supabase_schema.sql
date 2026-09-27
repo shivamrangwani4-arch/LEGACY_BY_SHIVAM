@@ -1,4 +1,4 @@
-﻿-- ========================================================
+-- ========================================================
 -- LEGACY BY SHIVAM RANGWANI (EST. 2026) - DATABASE SCHEMA
 -- Run this script in your Supabase SQL Editor:
 -- https://supabase.com/dashboard/project/vuquknseojgxeluplwcr/sql/new
@@ -29,7 +29,30 @@ CREATE TABLE IF NOT EXISTS public.newsletter_subscribers (
     subscribed_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- 3. CUSTOMER INQUIRIES & WHATSAPP LOGS
+-- 3. PRODUCTS CATALOG TABLE (For Live Dynamic Products Management)
+CREATE TABLE IF NOT EXISTS public.products (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    brand TEXT DEFAULT 'LEGACY',
+    gender TEXT NOT NULL, -- 'men', 'women', 'juniors'
+    category TEXT NOT NULL, -- 'polos', 'shirts', 'trousers', 'denim', 'dresses', 'jackets', 'accessories'
+    sub_category TEXT,
+    price NUMERIC NOT NULL,
+    original_price NUMERIC,
+    tag TEXT DEFAULT 'LEGACY ATELIER',
+    rating NUMERIC DEFAULT 5.0,
+    reviews_count INT DEFAULT 1,
+    image TEXT NOT NULL,
+    secondary_image TEXT,
+    colors JSONB DEFAULT '[]'::jsonb,
+    sizes JSONB DEFAULT '["S", "M", "L", "XL"]'::jsonb,
+    description TEXT,
+    features JSONB DEFAULT '[]'::jsonb,
+    in_stock BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 4. CUSTOMER INQUIRIES & WHATSAPP LOGS
 CREATE TABLE IF NOT EXISTS public.inquiries (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     customer_name TEXT,
@@ -40,20 +63,29 @@ CREATE TABLE IF NOT EXISTS public.inquiries (
 
 -- ========================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
--- These policies allow your website visitors to submit orders
--- and subscribe using your publishable anon key.
 -- ========================================================
 
 -- Enable Row Level Security on all tables
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.newsletter_subscribers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.inquiries ENABLE ROW LEVEL SECURITY;
 
 -- Drop existing policies if any to prevent duplicates
 DROP POLICY IF EXISTS "Allow public insert on orders" ON public.orders;
 DROP POLICY IF EXISTS "Allow public select on orders" ON public.orders;
 DROP POLICY IF EXISTS "Allow public insert on newsletter" ON public.newsletter_subscribers;
+DROP POLICY IF EXISTS "Allow public read on products" ON public.products;
+DROP POLICY IF EXISTS "Allow public insert on products" ON public.products;
+DROP POLICY IF EXISTS "Allow public update on products" ON public.products;
+DROP POLICY IF EXISTS "Allow public delete on products" ON public.products;
 DROP POLICY IF EXISTS "Allow public insert on inquiries" ON public.inquiries;
+
+-- Policy: Products Read/Write
+CREATE POLICY "Allow public read on products" ON public.products FOR SELECT USING (true);
+CREATE POLICY "Allow public insert on products" ON public.products FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update on products" ON public.products FOR UPDATE USING (true);
+CREATE POLICY "Allow public delete on products" ON public.products FOR DELETE USING (true);
 
 -- Policy 1: Allow any customer to create/place an order
 CREATE POLICY "Allow public insert on orders" 

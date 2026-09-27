@@ -25,12 +25,20 @@ function formatPrice(pkr) {
   return `${curr.symbol}${converted.toLocaleString()}`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   initProductPage();
   initCartDrawer();
   initCheckoutFlow();
   initCurrencySelector();
   lucide.createIcons();
+
+  // Load dynamic live product data from Supabase if available
+  if (typeof fetchProductsFromSupabase === 'function') {
+    const live = await fetchProductsFromSupabase();
+    if (live && live.length > 0) {
+      initProductPage();
+    }
+  }
 });
 
 function initProductPage() {

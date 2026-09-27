@@ -356,8 +356,16 @@ function setSort(sortType) {
 // ----------------------------------------------------
 // 3. Product Grid Rendering
 // ----------------------------------------------------
-function initProductGrid() {
+async function initProductGrid() {
   renderProductGrid();
+
+  // Load dynamic live products from Supabase if table is configured
+  if (typeof fetchProductsFromSupabase === 'function') {
+    const live = await fetchProductsFromSupabase();
+    if (live && live.length > 0) {
+      renderProductGrid();
+    }
+  }
 }
 
 function renderProductGrid() {
