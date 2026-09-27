@@ -382,7 +382,6 @@ function renderRelatedProducts() {
   container.innerHTML = related.map(p => `
     <div class="product-card" onclick="openProductPage('${p.id}')" style="cursor: pointer;">
       <div class="product-image-container">
-        ${p.badge ? `<span class="product-badge-pill">${p.badge}</span>` : ''}
         <img src="${p.image}" alt="${p.name}" loading="lazy">
         <div class="product-quick-actions">
           <button class="quick-action-btn" onclick="event.stopPropagation(); openProductPage('${p.id}')">

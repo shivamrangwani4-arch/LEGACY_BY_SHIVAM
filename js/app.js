@@ -432,14 +432,10 @@ function renderProductGrid() {
 
   gridContainer.innerHTML = products.map(product => {
     const isFav = STATE.wishlist.includes(product.id);
-    const badgeMarkup = product.badge 
-      ? `<span class="product-badge-pill ${product.isAiGenerated ? 'ai-badge' : ''}">${product.badge}</span>` 
-      : '';
 
     return `
       <div class="product-card" data-id="${product.id}" onclick="openProductPage('${product.id}')" style="cursor: pointer;">
         <div class="product-image-container">
-          ${badgeMarkup}
           <button class="product-wishlist-btn ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlist('${product.id}', event)">
             <i data-lucide="heart" style="width: 17px; height: 17px; fill: ${isFav ? '#e63946' : 'none'};"></i>
           </button>

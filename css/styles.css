@@ -936,25 +936,10 @@ button {
   transform: scale(1.04);
 }
 
-/* Badges */
-.product-badge-pill {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background-color: var(--color-black);
-  color: #ffffff;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: 2px;
-  z-index: 5;
-}
-
-.product-badge-pill.ai-badge {
-  background: linear-gradient(135deg, #1f2f4d 0%, #0d1725 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* Badges - Hidden to keep product photos clean and unobstructed */
+.product-badge-pill,
+.pdp-floating-badge {
+  display: none !important;
 }
 
 /* Wishlist Button */
