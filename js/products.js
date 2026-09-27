@@ -2,7 +2,7 @@
 // Cleaned: Removed Farhan Saeed, Dur-e-Fishan, and Graphic Tees as requested.
 // Starting 4: Selvedge Denim, Cable-Knit Polo, Pleated Wide-Leg Pants, Motorsport Racing Jersey.
 
-const PRODUCTS_DATA = [
+var PRODUCTS_DATA = [
 {
     "id": "leg-jun-01",
     "name": "Junior Relaxed Linen Camp Shirt & Baggy Denim Set",
@@ -1389,6 +1389,10 @@ const PRODUCTS_DATA = [
     features: ["Aero-mesh moisture control", "Sublimated non-fade racing graphics", "Relaxed camp collar silhouette", "Pre-shrunk wash"]
   }
 ];
+
+if (typeof window !== 'undefined') {
+  window.PRODUCTS_DATA = PRODUCTS_DATA;
+}
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { PRODUCTS_DATA };

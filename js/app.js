@@ -354,8 +354,30 @@ function setSort(sortType) {
 }
 
 // ----------------------------------------------------
-// 3. Product Grid Rendering
+// 3. Product Grid Rendering & Catalog Data Access
 // ----------------------------------------------------
+function getAllProducts() {
+  if (typeof window !== 'undefined' && Array.isArray(window.PRODUCTS_DATA)) {
+    return window.PRODUCTS_DATA;
+  }
+  return typeof PRODUCTS_DATA !== 'undefined' ? PRODUCTS_DATA : [];
+}
+
+function getProductById(id) {
+  return getAllProducts().find(p => p.id === id);
+}
+
+function searchProducts(query) {
+  const q = (query || '').toLowerCase().trim();
+  if (!q) return [];
+  return getAllProducts().filter(p => 
+    (p.name && p.name.toLowerCase().includes(q)) || 
+    (p.tag && p.tag.toLowerCase().includes(q)) || 
+    (p.category && p.category.toLowerCase().includes(q)) ||
+    (p.description && p.description.toLowerCase().includes(q))
+  );
+}
+
 async function initProductGrid() {
   renderProductGrid();
 
@@ -373,7 +395,7 @@ function renderProductGrid() {
   if (!gridContainer) return;
 
   // Shallow copy so sorting does not mutate original array
-  let products = [...PRODUCTS_DATA];
+  let products = [...getAllProducts()];
 
   // Strict Filter by gender: MEN, WOMEN, or JUNIORS ONLY (No ALL)
   const activeGender = ['men', 'women', 'juniors'].includes(STATE.currentGender) ? STATE.currentGender : 'men';

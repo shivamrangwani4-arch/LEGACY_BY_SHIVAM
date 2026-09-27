@@ -119,33 +119,59 @@ async function fetchProductsFromSupabase() {
     }
 
     if (data && data.length > 0) {
-      const formatted = data.map(item => ({
-        id: item.id,
-        name: item.name,
-        brand: item.brand || 'LEGACY',
-        gender: item.gender,
-        category: item.category,
-        subCategory: item.sub_category || item.category,
-        price: Number(item.price),
-        originalPrice: item.original_price ? Number(item.original_price) : null,
-        tag: item.tag || 'LEGACY ATELIER',
-        badge: item.badge || '',
-        rating: Number(item.rating || 5.0),
-        reviews: Number(item.reviews_count || 1),
-        image: item.image,
-        secondaryImage: item.secondary_image || item.image,
-        colors: Array.isArray(item.colors) ? item.colors : (typeof item.colors === 'string' ? JSON.parse(item.colors) : []),
-        sizes: Array.isArray(item.sizes) ? item.sizes : (typeof item.sizes === 'string' ? JSON.parse(item.sizes) : ['S', 'M', 'L', 'XL']),
-        description: item.description || '',
-        features: Array.isArray(item.features) ? item.features : (typeof item.features === 'string' ? JSON.parse(item.features) : [])
-      }));
+      const formatted = data.map(item => {
+        let cat = (item.category || '').toLowerCase();
+        let subCat = (item.sub_category || '').toLowerCase();
+        if (cat === 'men' || cat === 'women' || cat === 'juniors' || !cat) {
+          const n = (item.name || '').toLowerCase();
+          if (n.includes('shirt') || n.includes('polo') || n.includes('top') || n.includes('tee') || n.includes('jacket')) {
+            cat = 'tops';
+            subCat = 'shirts';
+          } else if (n.includes('pant') || n.includes('jeans') || n.includes('denim') || n.includes('trouser')) {
+            cat = 'pants';
+            subCat = 'trousers';
+          } else {
+            cat = 'tops';
+            subCat = 'shirts';
+          }
+        }
 
-      // Update global PRODUCTS_DATA
+        return {
+          id: item.id,
+          name: item.name,
+          brand: item.brand || 'LEGACY',
+          gender: (item.gender || 'men').toLowerCase(),
+          category: cat,
+          subCategory: subCat,
+          price: Number(item.price) || 0,
+          originalPrice: item.original_price ? Number(item.original_price) : null,
+          tag: item.tag || 'LEGACY ATELIER',
+          badge: item.badge || '',
+          rating: Number(item.rating || 5.0),
+          reviews: Number(item.reviews_count || 1),
+          image: item.image,
+          secondaryImage: item.secondary_image || item.image,
+          colors: Array.isArray(item.colors) ? item.colors : (typeof item.colors === 'string' ? JSON.parse(item.colors) : []),
+          sizes: Array.isArray(item.sizes) ? item.sizes : (typeof item.sizes === 'string' ? JSON.parse(item.sizes) : ['S', 'M', 'L', 'XL']),
+          description: item.description || '',
+          features: Array.isArray(item.features) ? item.features : (typeof item.features === 'string' ? JSON.parse(item.features) : [])
+        };
+      });
+
+      // Merge Supabase products at the top of the catalog
+      const localList = (typeof window !== 'undefined' && Array.isArray(window.PRODUCTS_DATA)) 
+        ? [...window.PRODUCTS_DATA] 
+        : [];
+      const supabaseIds = new Set(formatted.map(p => p.id));
+      const remainingLocal = localList.filter(p => !supabaseIds.has(p.id));
+
+      const merged = [...formatted, ...remainingLocal];
+
       if (typeof window !== 'undefined') {
-        window.PRODUCTS_DATA = formatted;
+        window.PRODUCTS_DATA = merged;
       }
-      console.log(`✅ Loaded ${formatted.length} live products from Supabase`);
-      return formatted;
+      console.log(`✅ Loaded ${formatted.length} Supabase products. Total catalog size: ${merged.length}`);
+      return merged;
     }
   } catch (err) {
     console.warn('Error reading products from Supabase:', err);
