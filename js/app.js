@@ -291,68 +291,6 @@ function setCategory(category) {
   renderProductGrid();
 }
 
-function openSortModal() {
-  const modal = document.getElementById('sortModalBackdrop');
-  if (modal) {
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-}
-
-function closeSortModal() {
-  const modal = document.getElementById('sortModalBackdrop');
-  if (modal) {
-    modal.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-}
-
-function applySortOption(sortType) {
-  setSort(sortType);
-  closeSortModal();
-
-  // Smooth scroll to catalog
-  const target = document.getElementById('catalogSortBar');
-  if (target) {
-    target.scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-function setSort(sortType) {
-  STATE.currentSort = sortType;
-
-  // Update sort pills active styling
-  document.querySelectorAll('.sort-pill-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-sort') === sortType);
-  });
-
-  // Update sort modal options active styling
-  document.querySelectorAll('.sort-option-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-sort-val') === sortType);
-  });
-
-  // Update label on catalog bar
-  const activeSortText = document.getElementById('activeSortNameText');
-  if (activeSortText) {
-    if (sortType === 'price-low-high') activeSortText.textContent = 'Low to High';
-    else if (sortType === 'price-high-low') activeSortText.textContent = 'High to Low';
-    else if (sortType === 'rating') activeSortText.textContent = 'Top Rated';
-    else activeSortText.textContent = 'Featured';
-  }
-
-  renderProductGrid();
-
-  if (sortType === 'price-low-high') {
-    showToast('Sorted: Price Low to High');
-  } else if (sortType === 'price-high-low') {
-    showToast('Sorted: Price High to Low');
-  } else if (sortType === 'rating') {
-    showToast('Sorted: Highest Rated');
-  } else {
-    showToast('Sorted: Featured Collection');
-  }
-}
-
 // ----------------------------------------------------
 // 3. Product Grid Rendering & Catalog Data Access
 // ----------------------------------------------------
@@ -419,32 +357,13 @@ function renderProductGrid() {
     }
   }
 
-  // Sorting: Low to High, High to Low, Rating, Featured
-  if (STATE.currentSort === 'price-low-high') {
-    products.sort((a, b) => a.price - b.price);
-  } else if (STATE.currentSort === 'price-high-low') {
-    products.sort((a, b) => b.price - a.price);
-  } else if (STATE.currentSort === 'rating') {
-    products.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  }
-
-  // Count & Sort Status Update
+  // Count Status Update
   const countBadge = document.getElementById('itemCountText');
-  const sortInfo = document.getElementById('catalogSortInfo');
   const genderLabel = `${STATE.currentGender.toUpperCase()}'s Collection`;
   const categoryLabel = CATEGORY_NAMES[STATE.currentCategory] || 'Items';
 
   if (countBadge) {
     countBadge.textContent = `Showing ${products.length} Products in ${genderLabel} (${categoryLabel}) · Cash on Delivery Available Across Pakistan`;
-  }
-
-  if (sortInfo) {
-    let sortName = 'Featured';
-    if (STATE.currentSort === 'price-low-high') sortName = 'Price: Low to High (Lowest First)';
-    if (STATE.currentSort === 'price-high-low') sortName = 'Price: High to Low (Luxury First)';
-    if (STATE.currentSort === 'rating') sortName = 'Highest Rated';
-
-    sortInfo.innerHTML = `Showing <strong>${products.length} Pieces</strong> · Sorted: <strong>${sortName}</strong>`;
   }
 
   if (products.length === 0) {

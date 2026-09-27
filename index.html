@@ -151,33 +151,6 @@
       <p class="section-subtitle" id="itemCountText">Curated Streetwear & Atelier Pieces</p>
     </div>
 
-    <!-- Side Sort & Catalog Bar (High to Low, Low to High) - Prominently Displayed -->
-    <div class="catalog-sort-bar" id="catalogSortBar">
-      <div class="catalog-sort-info" id="catalogSortInfo">
-        <span>Showing Collection</span>
-      </div>
-
-      <div class="catalog-sort-box">
-        <!-- Direct Sort Touch Trigger Button (Opens Bottom Sheet / Modal) -->
-        <button class="catalog-sort-trigger-btn" onclick="openSortModal()" aria-label="Open Sort Options">
-          <i data-lucide="arrow-up-down" style="width: 15px; height: 15px;"></i>
-          <span>Sort: <strong id="activeSortNameText">Featured</strong></span>
-          <i data-lucide="chevron-down" style="width: 15px; height: 15px;"></i>
-        </button>
-
-        <div class="sort-pills-row">
-          <button class="sort-pill-btn" data-sort="price-low-high" onclick="applySortOption('price-low-high')" title="Price: Low to High">
-            <i data-lucide="arrow-up-narrow-wide" style="width: 14px; height: 14px;"></i>
-            <span>Low to High</span>
-          </button>
-          <button class="sort-pill-btn" data-sort="price-high-low" onclick="applySortOption('price-high-low')" title="Price: High to Low">
-            <i data-lucide="arrow-down-wide-narrow" style="width: 14px; height: 14px;"></i>
-            <span>High to Low</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Category Filter Tabs Matching Exact Spotlight Titles -->
     <div class="category-filter-tabs">
       <button class="filter-tab-btn active" data-category="all">All Items</button>
@@ -237,71 +210,6 @@
       </div>
     </div>
   </section>
-
-  <!-- Interactive Sort Popup Modal / Bottom Sheet (High to Low, Low to High) -->
-  <div class="sort-modal-backdrop" id="sortModalBackdrop" onclick="closeSortModal()">
-    <div class="sort-bottom-sheet" onclick="event.stopPropagation()">
-      <div class="sort-sheet-header">
-        <div class="sort-sheet-title">
-          <i data-lucide="arrow-up-down" style="width: 18px; height: 18px;"></i>
-          <span>Sort Collection</span>
-        </div>
-        <button class="sort-sheet-close" onclick="closeSortModal()" aria-label="Close sort menu">
-          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
-        </button>
-      </div>
-
-      <div class="sort-options-list">
-        <!-- 1. Low to High -->
-        <button class="sort-option-btn" data-sort-val="price-low-high" onclick="applySortOption('price-low-high')">
-          <div class="sort-option-btn-left">
-            <span class="sort-radio-indicator"></span>
-            <div>
-              <div class="sort-option-name">Price: Low to High</div>
-              <div class="sort-option-desc">Affordable & everyday items first (from Rs. 1,290)</div>
-            </div>
-          </div>
-          <i data-lucide="arrow-up-narrow-wide" style="width: 20px; height: 20px; color: #111;"></i>
-        </button>
-
-        <!-- 2. High to Low -->
-        <button class="sort-option-btn" data-sort-val="price-high-low" onclick="applySortOption('price-high-low')">
-          <div class="sort-option-btn-left">
-            <span class="sort-radio-indicator"></span>
-            <div>
-              <div class="sort-option-name">Price: High to Low</div>
-              <div class="sort-option-desc">Luxury tailoring, shackets & flagship pieces first</div>
-            </div>
-          </div>
-          <i data-lucide="arrow-down-wide-narrow" style="width: 20px; height: 20px; color: #111;"></i>
-        </button>
-
-        <!-- 3. Featured / Default -->
-        <button class="sort-option-btn active" data-sort-val="featured" onclick="applySortOption('featured')">
-          <div class="sort-option-btn-left">
-            <span class="sort-radio-indicator"></span>
-            <div>
-              <div class="sort-option-name">Featured (Recommended)</div>
-              <div class="sort-option-desc">Curated seasonal look & atelier drop</div>
-            </div>
-          </div>
-          <i data-lucide="sparkles" style="width: 18px; height: 18px; color: #111;"></i>
-        </button>
-
-        <!-- 4. Top Rated -->
-        <button class="sort-option-btn" data-sort-val="rating" onclick="applySortOption('rating')">
-          <div class="sort-option-btn-left">
-            <span class="sort-radio-indicator"></span>
-            <div>
-              <div class="sort-option-name">Highest Customer Rating</div>
-              <div class="sort-option-desc">5.0 Star verified buyer favorites</div>
-            </div>
-          </div>
-          <i data-lucide="star" style="width: 18px; height: 18px; fill: #ff9900; stroke: none;"></i>
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- Slide-Out Mobile Navigation Drawer (Exact Match to Reference Image 5) -->
   <div class="drawer-backdrop" id="drawerBackdrop"></div>
